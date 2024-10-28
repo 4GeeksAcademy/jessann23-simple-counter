@@ -1,44 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import Card from "./card"
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
-//create your first component
+
 const Home = () => {
 
-setInterval(()=>{
-	const palabra=["Hola", "Mundo", "Programacion", "Javascript"]
-	const IndiceAleatorio = Math.floor(Math.random() *palabra.length)
-	console.log(palabra[IndiceAleatorio]);
-	
-},1000) 
+	const [sec, setSec] = useState(0);
+	const [digits, setDigits] = useState([]);
+
+	useEffect(() => {
 
 
-let sec = 0
-setInterval(()=>{
-	const one= Math.floor((sec/1)%10)
-	console.log(one)
-	sec+= 1
-}, 1000)
+		const interval = setInterval(() => {
+			setSec(prevSec => prevSec + 1);
+		}, 1000);
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		const newDigits = [
+			Math.floor((sec / 100000) % 10),
+			Math.floor((sec / 10000) % 10),
+			Math.floor((sec / 1000) % 10),
+			Math.floor((sec / 100) % 10),
 
 
+			Math.floor((sec / 10) % 10),
+			Math.floor(sec % 10),
+		];
 
-	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		setDigits(newDigits)
+	}, [sec]);
+
+return(
+
+
+<div className="container-fluid mt-9">
+			<div className="row justify-content-center">
+				{digits.map((digit, index) => (
+					<div key={index} className="col-2" style={{ padding: '0' }}>
+						<Card numero={digit} 
+						isClock={index === 0}
+						/>
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };
 
-export default Home;
+
+
+export default Home
