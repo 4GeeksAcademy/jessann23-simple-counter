@@ -1,54 +1,48 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import Card from "./card.jsx";
 
 let seconds = 0;
-let interval;
 
-const updateDigits = (newSeconds) => {
-  return [
-    Math.floor((newSeconds / 100000) % 10),
-    Math.floor((newSeconds / 10000) % 10),
-    Math.floor((newSeconds / 1000) % 10),
-    Math.floor((newSeconds / 100) % 10),
-    Math.floor((newSeconds / 10) % 10),
-    Math.floor(newSeconds % 10)
-  ];
+const updateDigits = () => {
+  seconds += 1;
+
+  const digitFour = Math.floor((seconds / 1000) % 10);
+  const digitThree = Math.floor((seconds / 100) % 10);
+  const digitTwo = Math.floor((seconds / 10) % 10);
+  const digitOne = Math.floor((seconds / 1) % 10);
+
+  ReactDOM.render(
+    <Home digitOne={digitOne} digitTwo={digitTwo} digitThree={digitThree} digitFour={digitFour} />,
+    document.querySelector("#app")
+  );
 };
 
-
-const startTimer = (setDigits) => {
-  interval = setInterval(() => {
-    seconds += 1;
-    const newDigits = updateDigits(seconds);
-
-    console.log(newDigits);
-    setDigits(newDigits);
-  }, 1000);
-};
-
-const Home = () => {
-  const [digits, setDigits] = React.useState(Array(7).fill(0));
-
-
-  React.useEffect(() => {
-    startTimer(setDigits);
-    return () => clearInterval(interval);
-  }, []);
-
+const Home = ({ digitOne, digitTwo, digitThree, digitFour }) => {
   return (
     <div className="container-fluid mt-4">
-            <div className="row justify-content-center">
-                {digits.map((digit, index) => (
-                    <div key={index} className="col-2" style={{ padding: "0" }}>
-                        <Card isClock={index === "isClock"} numero={index ==="isClock"  ? '' : digit} />
-                    
-
-
-          </div>
-        ))}
+      <div className="row justify-content-center">
+        <div className="col-2" style={{ padding: "0" }}>
+          <Card isClock={true} numero={""} />
+        </div>
+        <div className="col-2" style={{ padding: "0" }}>
+          <Card isClock={false} numero={digitFour} />
+        </div>
+        <div className="col-2" style={{ padding: "0" }}>
+          <Card isClock={false} numero={digitThree} />
+        </div>
+        <div className="col-2" style={{ padding: "0" }}>
+          <Card isClock={false} numero={digitTwo} />
+        </div>
+        <div className="col-2" style={{ padding: "0" }}>
+          <Card isClock={false} numero={digitOne} />
+        </div>
       </div>
     </div>
   );
 };
+
+
+setInterval(updateDigits, 1000);
 
 export default Home;
